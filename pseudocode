@@ -1,0 +1,8 @@
+- We want the drop down menu to select and 'test subject ID No.' 
+from the dataset and the 'Demographic info' below should update 
+dynamically. 
+
+- For this to work, we need to load in the JSON file using d3 and make it searchable by 'test subject ID No.'
+
+- For the horizontal bar chart, we want the 'sample_values', 'otu_ids', and 'otu_labels'
+
