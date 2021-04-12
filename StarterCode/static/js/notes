@@ -1,0 +1,45 @@
+  // use data.filter to filter for each id
+  // data = data.filter();
+  // Sort the data array using the otu_ids value
+//   data = data.sort(function(a, b) {
+//     return parseFloat(b.otu_ids) - parseFloat(a.otu_ids);
+//   });
+//   // Slice the first 10 objects for plotting
+//   data = data.slice(0, 10);
+
+// // // Reverse the array due to Plotly's defaults
+//   data = data.reverse();
+//   console.log(data);
+
+//   // Grab values from 'data' object to build the plots
+//   var values = data.sample_values;
+//   var ids = data.otu_ids;
+//   var labels = data.otu_labels;
+
+// use data.filter to filter for each row in index
+
+  // var trace1 = {
+  //   type: "bar",
+  //   x: data.map(row => row.otu_ids),
+  //   y: data.map(row => row.sample_values),
+  //   text: data.map(row => row.otu_labels),
+  //   orientation: 'h'   
+  //   };
+
+  
+// });
+
+    
+    
+
+//      var data = [trace1];
+
+//      Plotly.newPlot('bar', data);
+
+  // });
+
+// }
+
+// buildPlot();
+
+

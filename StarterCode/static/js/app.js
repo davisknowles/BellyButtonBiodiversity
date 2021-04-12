@@ -2,46 +2,80 @@
 //-------------------------------------------------------------
 
 // Use the D3 library to read in `samples.json`.
-var sampleData = "samples.json";
+// var sampleData = ;
 // helper function
 function unpack(rows, index) {
   return rows.map(function(row) {
     return row[index];
   });
 }
+function barChart() {
+    // unpack data by id
+  d3.json("samples.json").then((importedSamples) => {
+    // var data = samples.samples[0];
+    // console.log(importedSamples);
+    var userInput = 0 // change to user input function 
+    var data = importedSamples.samples[userInput].sample_values;
+    console.log(data);
+    var trace1 = {
+    type: "bar",
+    x: data.slice(0, 10),
+    // y: values,
+    // text: labels,
+    orientation: 'h'   
 
-// unpack data by id
-d3.json(sampleData).then(function(samples) {
-  var parseData = unpack(samples.dataset.id);
-  console.log(parseData);
-});
+    }
+    var chartData = [trace1];
 
+    Plotly.newPlot('bar', chartData);
+  })
+}
 
+barChart()
 
-// // Fetch the json data and console log it
-// function buildPlot() {
-//   d3.json(sampleData).then(function(samples) {
+function bubbleChart() {
+  // unpack data by id
+d3.json("samples.json").then((importedSamples) => {
+  // var data = samples.samples[0];
+  // console.log(importedSamples);
+  var userInput = 0 // change to user input function 
+  var data = importedSamples.samples[userInput].sample_values;
+  console.log(data);
+  var trace1 = {
+  type: "",
+  x: data.slice(0, 10),
+  y: data.slice(0,10),
+  mode: 'markers',
+  marker: {
+    size: data.slice(0, 10),
+    color: data.slice(0, 10),
+    // colorscale: ,
+  }
+  // text: labels,
+  // orientation: 'h'   
 
-//     //Grab values from the data json object to build plot
-//     var sample_values = unpack(samples.dataset.sample_values);
-//     var otu_ids = unpack(samples.dataset.otu_ids);
-//     var otu_labels = unpack(samples.dataset.otu_labels);
+  }
+  var chartData = [trace1];
 
-//     var trace1 = [{
-//       type: "bar",
-//       x: otu_ids,
-//       y: sample_values,
-//       orientation: 'h'   
-//      }];
+  Plotly.newPlot('bubble', chartData);
+})
+}
+bubbleChart()
 
-//      var data = [trace1];
+var tableDisplay;
+// build function for demographic info at 'sample-metadata'
+function buildTable() {
+  // unpack data by id
+d3.json("samples.json").then((importedSamples) => {
+  // var data = samples.samples[0];
+  // console.log(importedSamples);
+  var userInput = 0 // change to user input function 
+  var data = importedSamples.samples[userInput].sample_values;
+  console.log(data);
 
-//      Plotly.newPlot('bar', data);
+  document.getElementById("sample-metadata").innerHTML = "Paragraph changed!";
 
-//   });
-
-// }
-
-// buildPlot();
-
-
+  // tableDisplay.text("test")
+})
+}
+buildTable()
