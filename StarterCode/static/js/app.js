@@ -20,8 +20,7 @@ function barChart() {
     var trace1 = {
     type: "bar",
     x: data.slice(0, 10),
-    // y: values,
-    // text: labels,
+    // y: data.otu_ids,
     orientation: 'h'   
 
     }
@@ -49,7 +48,6 @@ d3.json("samples.json").then((importedSamples) => {
   marker: {
     size: data.slice(0, 10),
     color: data.slice(0, 10),
-    // colorscale: ,
   }
   // text: labels,
   // orientation: 'h'   
@@ -64,18 +62,22 @@ bubbleChart()
 
 var tableDisplay;
 // build function for demographic info at 'sample-metadata'
-function buildTable() {
+function buildMetadata() {
   // unpack data by id
 d3.json("samples.json").then((importedSamples) => {
   // var data = samples.samples[0];
   // console.log(importedSamples);
   var userInput = 0 // change to user input function 
-  var data = importedSamples.samples[userInput].sample_values;
+  var data = importedSamples.metadata[userInput];
   console.log(data);
-
-  document.getElementById("sample-metadata").innerHTML = "Paragraph changed!";
-
+  // data = JSON.stringify(data);
+  // document.getElementById("sample-metadata").innerHTML = data;
+  var table = d3.select("#sample-metadata");
+  table.html("");
+  Object.entries(data).forEach(([key, value]) => {
+    table.append("h4").text(`${key}: ${value}`);
+  })
   // tableDisplay.text("test")
-})
+});
 }
-buildTable()
+buildMetadata()
