@@ -1,83 +1,106 @@
 // BELLY BUTTON BIODIVERSITY using plot.ly
-//-------------------------------------------------------------
 
-// Use the D3 library to read in `samples.json`.
-// var sampleData = ;
-// helper function
-function unpack(rows, index) {
-  return rows.map(function(row) {
-    return row[index];
-  });
+
+
+//------------------------------
+// Build dropdown function 
+// ------------------------------
+d3.json("samples.json").then(data => {    
+
+  var names = data.names;
+
+  var dropDown = d3.select("#selDataset");
+
+  names.forEach(sample => {
+    dropDown.append("option")
+    .text(sample)
+    .attr("id", sample);
+  })
+
+  init()
+});
+
+// Call updatePlotly() when a change takes place to the DOM
+d3.selectAll("#selDataset").on("change", optionChanged);
+
+// set initial plot
+function init() {
+  var dropDown = d3.select("#selDataset");
+  // assign dropdown option to variable
+  var position = dropDown.property("value");
+
+  optionChanged(position)
 }
-function barChart() {
-    // unpack data by id
-  d3.json("samples.json").then((importedSamples) => {
-    // var data = samples.samples[0];
-    // console.log(importedSamples);
-    var userInput = 0 // change to user input function 
-    var data = importedSamples.samples[userInput].sample_values;
-    console.log(data);
+
+function optionChanged() {
+  var dropDown = d3.select("#selDataset");
+  var position = dropDown.property("value");
+    console.log(position);
+
+  d3.json("samples.json").then(data => {    
+
+    //----------------------------------------------------------------
+    // Build Demographic Info table for Metadata
+    //----------------------------------------------------------------
+    var metaData = data.metadata.filter(data => {return data.id == position})
+      // console.log(metaData)
+    var table = d3.select("#sample-metadata");
+    table.html("");
+
+    Object.entries(metaData[0]).forEach(([key, value]) => {
+      table.append("h6").text(`${key}: ${value}`);
+    }) 
+
+    // Use d3 to fetch sample data
+    var samples = data.samples;
+    var result = samples.filter(data => data.id == position)[0];
+      console.log(result)
+
+    var ids = result.otu_ids;
+    var labels = result.otu_labels;
+    var values = result.sample_values;
+
+    //-------------------------------------------------------------
+    // Build Bar Chart 
+    //-------------------------------------------------------------
     var trace1 = {
     type: "bar",
-    x: data.slice(0, 10),
-    // y: data.otu_ids,
+    x: values.slice(0, 10).reverse(),
+    y: ids.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse(),
+    text: labels.slice(0, 10).reverse(),
     orientation: 'h'   
+    };
+    var chartData1 = [trace1];
 
+    var layout1 = {
+      title: "Top 10 OTUs",
+    };
+
+    Plotly.newPlot('bar', chartData1, layout1);
+
+    //-------------------------------------------------------
+    // Build Bubble Chart 
+    //-------------------------------------------------------
+    var trace2 = {
+      type: "",
+      x: ids,
+      y: values,
+      text: labels,
+      mode: 'markers',
+      marker: {
+        size: values,
+        color: ids,
+      }
     }
-    var chartData = [trace1];
+    var chartData2 = [trace2];
 
-    Plotly.newPlot('bar', chartData);
-  })
+    var layout2 = {
+      margin: {t: 0},
+      xaxis: {title: "OTU ID"},
+    }
+
+    Plotly.newPlot('bubble', chartData2, layout2);
+
+  });
 }
 
-barChart()
-
-function bubbleChart() {
-  // unpack data by id
-d3.json("samples.json").then((importedSamples) => {
-  // var data = samples.samples[0];
-  // console.log(importedSamples);
-  var userInput = 0 // change to user input function 
-  var data = importedSamples.samples[userInput].sample_values;
-  console.log(data);
-  var trace1 = {
-  type: "",
-  x: data.slice(0, 10),
-  y: data.slice(0,10),
-  mode: 'markers',
-  marker: {
-    size: data.slice(0, 10),
-    color: data.slice(0, 10),
-  }
-  // text: labels,
-  // orientation: 'h'   
-
-  }
-  var chartData = [trace1];
-
-  Plotly.newPlot('bubble', chartData);
-})
-}
-bubbleChart()
-
-var tableDisplay;
-// build function for demographic info at 'sample-metadata'
-function buildMetadata() {
-  // unpack data by id
-d3.json("samples.json").then((importedSamples) => {
-  // var data = samples.samples[0];
-  // console.log(importedSamples);
-  var userInput = 0 // change to user input function 
-  var data = importedSamples.metadata[userInput];
-  console.log(data);
-  // data = JSON.stringify(data);
-  // document.getElementById("sample-metadata").innerHTML = data;
-  var table = d3.select("#sample-metadata");
-  table.html("");
-  Object.entries(data).forEach(([key, value]) => {
-    table.append("h4").text(`${key}: ${value}`);
-  })
-  // tableDisplay.text("test")
-});
-}
-buildMetadata()
